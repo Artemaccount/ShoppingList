@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishListener 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ShopListAdapter
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -29,9 +28,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishListener 
         viewModel.data.observe(this) {
             adapter.submitList(it)
         }
-
         viewModel.getShopItemList()
-
         addButtonClickListener()
 
     }

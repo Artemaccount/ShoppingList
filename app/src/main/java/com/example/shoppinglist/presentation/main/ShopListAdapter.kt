@@ -32,34 +32,28 @@ class ShopListAdapter(
     override fun onBindViewHolder(holder: ShopListViewHolder, position: Int) {
         with(holder) {
             val item = getItem(position)
+            binding.item = item
             if (item.enabled) {
-                card.cardElevation = 10f
-                container.setBackgroundColor(holder.card.context.getColor(R.color.purple))
+                binding.cardItem.cardElevation = 10f
+                binding.containerId.setBackgroundColor(holder.binding.cardItem.context.getColor(R.color.purple))
             } else {
-                card.cardElevation = 0f
-                container.setBackgroundColor(holder.card.context.getColor(R.color.purple_light))
+                binding.cardItem.cardElevation = 0f
+                binding.containerId.setBackgroundColor(holder.binding.cardItem.context.getColor(R.color.purple_light))
             }
-            container.setOnClickListener {
+            binding.containerId.setOnClickListener {
                 onShopItemClickInteractor.onClick(item)
             }
-            container.setOnLongClickListener {
+            binding.containerId.setOnLongClickListener {
                 onShopItemClickInteractor.onLongClick(item)
                 true
             }
-            itemName.text = item.name
-            itemCount.text = item.count.toString()
         }
 
     }
 }
 
-class ShopListViewHolder(binding: ShopItemBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-    val container = binding.containerId
-    val card = binding.cardItem
-    val itemName = binding.itemNameId
-    val itemCount = binding.itemCountId
-}
+class ShopListViewHolder(val binding: ShopItemBinding) :
+    RecyclerView.ViewHolder(binding.root)
 
 class ShopListItemDiffCallback : DiffUtil.ItemCallback<ShopItem>() {
     override fun areItemsTheSame(oldItem: ShopItem, newItem: ShopItem): Boolean =

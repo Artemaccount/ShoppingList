@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:id="@+id/card_item"
-    android:layout_height="48dp"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="8dp">
+<layout>
 
-    <LinearLayout
-        android:id="@+id/container_id"
+    <data>
+        <variable
+            name="item"
+            type="com.example.shoppinglist.domain.dto.ShopItem" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/card_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/purple"
-        android:orientation="horizontal">
+        android:layout_height="48dp"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/item_name_id"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/container_id"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Картошка" />
+            android:background="@color/purple"
+            android:orientation="horizontal">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/item_count_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="4кг" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/item_name_id"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:text="@{item.name}"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Картошка" />
 
-    </LinearLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/item_count_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:int_to_string="@{item.count}"
+                tools:text="4кг" />
+
+        </LinearLayout>
 
 
-</com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
