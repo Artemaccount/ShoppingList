@@ -14,7 +14,6 @@ interface OnShopItemClickInteractor {
     fun onLongClick(shopItem: ShopItem)
 }
 
-
 class ShopListAdapter(
     private val onShopItemClickInteractor: OnShopItemClickInteractor
 ) : ListAdapter<ShopItem, ShopListViewHolder>(

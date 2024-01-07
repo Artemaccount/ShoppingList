@@ -22,7 +22,6 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishListe
         if (savedInstanceState == null) {
             launchScreenMode()
         }
-
     }
 
     private fun parseIntent() {

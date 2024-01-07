@@ -1,6 +1,9 @@
 package com.example.shoppinglist.presentation.main
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.data.ShopListRepositoryImpl
 import com.example.shoppinglist.domain.dto.ShopItem
 import com.example.shoppinglist.domain.use_cases.AddShopItemUseCase
@@ -8,32 +11,34 @@ import com.example.shoppinglist.domain.use_cases.DeleteShopItemUseCase
 import com.example.shoppinglist.domain.use_cases.GetShopItemListUseCase
 import com.example.shoppinglist.domain.use_cases.GetShopItemUseCase
 import com.example.shoppinglist.domain.use_cases.UpdateShopItemUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
-    private val repository = ShopListRepositoryImpl
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository = ShopListRepositoryImpl(application)
 
-    private val addShopItemUseCase = AddShopItemUseCase(repository)
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
     private val getShopItemListUseCase = GetShopItemListUseCase(repository)
-    private val getShopItemUseCase = GetShopItemUseCase(repository)
     private val updateShopItemUseCase = UpdateShopItemUseCase(repository)
 
     val data = getShopItemListUseCase.getShopItemList()
+
+
     fun getShopItemList() {
         getShopItemListUseCase.getShopItemList()
     }
 
     fun deleteItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        viewModelScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        updateShopItemUseCase.updateShopItem(shopItem.copy(enabled = !shopItem.enabled))
-    }
-
-    fun getShopItem(id: Int) = getShopItemUseCase.getShopItemById(id)
-
-    fun addShopItem(shopItem: ShopItem) {
-        addShopItemUseCase.addShopItem(shopItem)
+        viewModelScope.launch {
+            updateShopItemUseCase.updateShopItem(shopItem.copy(enabled = !shopItem.enabled))
+        }
     }
 }

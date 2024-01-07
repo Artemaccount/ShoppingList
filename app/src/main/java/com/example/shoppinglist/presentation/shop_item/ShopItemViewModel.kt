@@ -1,17 +1,24 @@
 package com.example.shoppinglist.presentation.shop_item
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.data.ShopListRepositoryImpl
 import com.example.shoppinglist.domain.dto.ShopItem
 import com.example.shoppinglist.domain.use_cases.AddShopItemUseCase
 import com.example.shoppinglist.domain.use_cases.GetShopItemUseCase
 import com.example.shoppinglist.domain.use_cases.UpdateShopItemUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.lang.ClassCastException
 
-class ShopItemViewModel : ViewModel() {
-    private val repository = ShopListRepositoryImpl
+class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository = ShopListRepositoryImpl(application)
 
     private val addShopItemUseCase = AddShopItemUseCase(repository)
     private val updateShopItemUseCase = UpdateShopItemUseCase(repository)
@@ -39,13 +46,15 @@ class ShopItemViewModel : ViewModel() {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         if (isFieldsCorrect(name, count)) {
-            addShopItemUseCase.addShopItem(
-                ShopItem(
-                    name = name,
-                    count = count,
-                    enabled = true
+            viewModelScope.launch {
+                addShopItemUseCase.addShopItem(
+                    ShopItem(
+                        name = name,
+                        count = count,
+                        enabled = true
+                    )
                 )
-            )
+            }
             finishWork()
         }
     }
@@ -87,24 +96,27 @@ class ShopItemViewModel : ViewModel() {
         val parsedCount = parseCount(count)
         _item.value?.let {
             if (isFieldsCorrect(parsedName, parsedCount)) {
-                updateShopItemUseCase.updateShopItem(
-                    it.copy(
-                        name = parsedName,
-                        count = parsedCount
+                viewModelScope.launch {
+                    updateShopItemUseCase.updateShopItem(
+                        it.copy(
+                            name = parsedName,
+                            count = parsedCount
+                        )
                     )
-                )
+                }
                 finishWork()
             }
         }
     }
 
     fun getShopItem(id: Int) {
-        val item = getShopItemUseCase.getShopItemById(id)
-        _item.value = item
+        viewModelScope.launch {
+            val item = getShopItemUseCase.getShopItemById(id)
+            _item.value = item
+        }
     }
 
     private fun finishWork() {
         _closeScreen.value = Unit
     }
-
 }
